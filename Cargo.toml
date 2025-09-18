@@ -1,0 +1,21 @@
+[package]
+name = "physpanel"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies.windows]
+version = "0.62"
+features = [
+    "Win32_Foundation",
+    "Win32_System_LibraryLoader",
+]
+
+[dependencies.windows-core]
+version = "0.62"
+
+[dependencies.windows-link]
+version = "0.2"
+
+[build-dependencies.windows-bindgen]
+version = "0.63"

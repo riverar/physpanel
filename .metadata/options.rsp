@@ -1,0 +1,7 @@
+--exclude
+PWNF_USER_CALLBACK
+--with-librarypath
+RtlQueryWnfStateData=ntdll.dll
+RtlPublishWnfStateData=ntdll.dll
+--remap
+_WNF_TYPE_ID=WNF_TYPE_ID

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.Windows.WinmdGenerator/0.63.31-preview">
+    <PropertyGroup Label="Globals">
+        <OutputWinmd>Microsoft.Internal.winmd</OutputWinmd>
+        <WinmdVersion>255.255.255.255</WinmdVersion>
+        <AdditionalIncludes>$(CompiledHeadersDir);</AdditionalIncludes>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Partition Include="main.cpp">
+            <TraverseFiles>internal.h</TraverseFiles>
+            <Namespace>Microsoft.Internal</Namespace>
+            <ExcludeFromCrossarch>true</ExcludeFromCrossarch>
+        </Partition>
+    </ItemGroup>
+</Project>
