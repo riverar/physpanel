@@ -10,6 +10,12 @@ const WNF_DX_INTERNAL_PANEL_DIMENSIONS: WNF_STATE_NAME = WNF_STATE_NAME {
     Data: [0xA3BC4875, 0x41C61629], // 0x41C61629_A3BC4875u64
 };
 
+#[derive(Debug, Clone, Copy, Default)]
+struct Dimensions {
+    width_mm: u32,
+    height_mm: u32,
+}
+
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
@@ -18,41 +24,50 @@ fn main() -> Result<()> {
     }
 
     let action = &args[1];
-    if action == "get" {
-        let size = get_display_size()?;
-        let width = size.0;
-        let height = size.1;
-        let diagonal_mm = ((width * width + height * height) as f64).sqrt();
-        let diagonal_inches = diagonal_mm / 25.4;
-        println!(
-            "Current size: {}x{}mm ({:.2}\")",
-            width, height, diagonal_inches
-        );
-    } else if action == "set" {
-        if args.len() != 4 {
-            print_usage();
-        } else {
-            set_display_size(args[2].parse().unwrap(), args[3].parse().unwrap())?;
-            println!("OK.");
+    match action.as_str() {
+        "get" => {
+            let size = get_display_size()?;
+            let diagonal_mm = ((size.width_mm.pow(2) + size.height_mm.pow(2)) as f64).sqrt();
+
+            const MM_PER_INCH: f64 = 25.4;
+            let diagonal_inches = diagonal_mm / MM_PER_INCH;
+
+            println!(
+                "Current size: {}x{}mm ({:.2}\")",
+                size.width_mm, size.height_mm, diagonal_inches
+            );
         }
-    } else {
-        print_usage();
+        "set" => {
+            if args.len() != 4 {
+                print_usage();
+            } else {
+                set_display_size(Dimensions {
+                    width_mm: args[2].parse().unwrap(),
+                    height_mm: args[3].parse().unwrap(),
+                })?;
+                println!("OK.");
+            }
+        }
+        _ => {
+            print_usage();
+        }
     }
 
     Ok(())
 }
 
+#[rustfmt::skip]
 fn print_usage() {
-    println!("physpanel 0.1.0");
+    println!("physpanel 0.1.1");
     println!("Copyright © Rafael Rivera\n");
     println!("This program comes with ABSOLUTELY NO WARRANTY.");
     println!("This is free software, and you are welcome to redistribute it under certain conditions.\n");
     println!("Usage: physpanel <get|set> [width_mm height_mm]");
 }
 
-fn get_display_size() -> Result<(u32, u32)> {
+fn get_display_size() -> Result<Dimensions> {
     let mut change_stamp = 0u32;
-    let mut output = (0u32, 0u32);
+    let mut output = Dimensions::default();
 
     let status = unsafe {
         RtlQueryWnfStateData(
@@ -64,15 +79,11 @@ fn get_display_size() -> Result<(u32, u32)> {
         )
     };
 
-    if status == STATUS_SUCCESS {
-        Ok(output)
-    } else {
-        Err(Error::from(status))
-    }
+    status.ok().map(|_| output)
 }
 
-fn set_display_size(width_mm: u32, height_mm: u32) -> Result<()> {
-    let dimensions: u64 = ((height_mm as u64) << 32) | (width_mm as u64);
+fn set_display_size(dims: Dimensions) -> Result<()> {
+    let dimensions: u64 = ((dims.height_mm as u64) << 32) | (dims.width_mm as u64);
 
     let status = unsafe {
         RtlPublishWnfStateData(
