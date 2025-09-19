@@ -5,16 +5,20 @@ edition = "2024"
 publish = false
 
 [dependencies.windows]
-version = "0.62"
+git = "https://github.com/microsoft/windows-rs"
+rev = "833ec8ba443f780eb69e9fbb4ef615b012a7ef29"
 features = [
     "Win32_Foundation",
 ]
 
 [dependencies.windows-core]
-version = "0.62"
+git = "https://github.com/microsoft/windows-rs"
+rev = "833ec8ba443f780eb69e9fbb4ef615b012a7ef29"
 
 [dependencies.windows-link]
-version = "0.2"
+git = "https://github.com/microsoft/windows-rs"
+rev = "833ec8ba443f780eb69e9fbb4ef615b012a7ef29"
 
 [build-dependencies.windows-bindgen]
-version = "0.63"
+git = "https://github.com/microsoft/windows-rs"
+rev = "833ec8ba443f780eb69e9fbb4ef615b012a7ef29"

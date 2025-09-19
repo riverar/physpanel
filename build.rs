@@ -12,6 +12,7 @@ fn main()
         "--flat",
         "--filter",
         "Microsoft.Internal",
+        "--specific-deps",
         "--reference",
         "windows,skip-root,Windows",
     ])
