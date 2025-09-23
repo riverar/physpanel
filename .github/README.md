@@ -8,6 +8,8 @@ It works by reading and writing data to the Windows Notification Facility (WNF) 
 
 ## Usage
 
+Physpanel must run as the SYSTEM user, not just with elevated administrative privileges. See examples below.
+
 ### Scheduled task (recommended)
 
 1. Open a shell as Administrator
