@@ -11,10 +11,7 @@ features = [
 ]
 
 [dependencies.windows-core]
-version = "0.62"
-
-[dependencies.windows-link]
-version = "0.2"
+version = ">=0.62.1"
 
 [build-dependencies.windows-bindgen]
-version = "0.63"
+version = "0.64"
